@@ -10,7 +10,6 @@ use ForumHouse\SelectelStorageApi\File\File;
 use ForumHouse\SelectelStorageApi\Utility\HttpClient;
 use ForumHouse\SelectelStorageApi\Utility\Response;
 use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Post\PostBody;
 use GuzzleHttp\Post\PostBodyInterface;
 use GuzzleHttp\Post\PostFile;
 
@@ -60,9 +59,9 @@ class StorageService
 
         $request = $this->createHttpRequest('put', $container, $file);
         /** @var PostBodyInterface $postBody */
-        $postBody = new PostBody();
-        $postBody->addFile(new PostFile(basename($file->getLocalName()), $file->openLocal('r')));
-        $request->setBody($postBody);
+        $postFile = new PostFile(basename($file->getLocalName()), $file->openLocal('r'));
+        $body = $postFile->getContent();
+        $request->setBody($body);
         $request->addHeaders($file->getHeaders());
         /** @var ResponseInterface $response */
         $response = $this->httpClient->send($request);
