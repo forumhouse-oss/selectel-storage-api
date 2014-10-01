@@ -7,6 +7,20 @@ Selectel cloud storage API
 An example of use
 ====================
 
+Composer setup
+-------------------
+```
+    "require": {
+        "forumhouseteam/selectel-storage-api": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ForumHouseTeam/selectel-storage-api"
+        }
+    ]
+```
+
 Uploading a file
 -------------------
 ```php
