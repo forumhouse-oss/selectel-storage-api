@@ -38,11 +38,12 @@ class Container
 
     /**
      * @param string $name
+     *
+     * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+        return $this;
     }
-
-
 }

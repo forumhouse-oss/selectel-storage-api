@@ -47,10 +47,13 @@ class File
 
     /**
      * @param string $containerName
+     *
+     * @return $this
      */
     public function setServerName($containerName)
     {
         $this->serverName = $containerName;
+        return $this;
     }
 
     /**
@@ -63,6 +66,8 @@ class File
 
     /**
      * @param int $size
+     *
+     * @return $this
      */
     public function setSize($size = null)
     {
@@ -71,12 +76,13 @@ class File
             $size = filesize($this->localName);
         }
         $this->headers['Content-Length'] = $size;
+        return $this;
     }
 
     /**
      * Gets file content type
      *
-*@return string
+     * @return string
      */
     public function getContentType()
     {
@@ -87,6 +93,8 @@ class File
      * Sets file content type
      *
      * @param string $contentType Content type to set. If not provided - it will be guessed from $this->localName
+     *
+     * @return $this
      */
     public function setContentType($contentType = null)
     {
@@ -95,6 +103,7 @@ class File
             $contentType = $this->getMimeType($this->localName);
         }
         $this->headers['Content-Type'] = $contentType;
+        return $this;
     }
 
     /**
@@ -105,9 +114,15 @@ class File
         return $this->headers['Content-Disposition'];
     }
 
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
     public function setContentDisposition($value)
     {
         $this->headers['Content-Disposition'] = $value;
+        return $this;
     }
 
     /**
@@ -124,10 +139,13 @@ class File
      * Sets http file headers for a file
      *
      * @param string[] $headers
+     *
+     * @return $this
      */
     public function setHeaders(array $headers)
     {
         $this->headers = $headers;
+        return $this;
     }
 
     /**
@@ -140,10 +158,13 @@ class File
 
     /**
      * @param string $localName
+     *
+     * @return $this
      */
     public function setLocalName($localName)
     {
         $this->localName = $localName;
+        return $this;
     }
 
     /**
@@ -208,4 +229,3 @@ class File
         return $contentType;
     }
 }
- 
