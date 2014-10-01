@@ -1,7 +1,9 @@
 selectel-storage-api
 ====================
 
-Selectel cloud storage API
+Selectel Cloud Storage API.
+
+This repository represents work in progress. No stable version released yet.
 
 
 An example of use
