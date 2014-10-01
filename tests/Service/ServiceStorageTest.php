@@ -24,6 +24,7 @@ class ServiceStorageTest extends \PHPUnit_Framework_TestCase
 
         $file = new File('test.txt');
         $file->setLocalName(__DIR__ . '/../data/config.php');
+        $file->setContentType();
         $file->setSize();
 
         $service = new StorageService($auth);
