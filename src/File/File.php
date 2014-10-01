@@ -2,6 +2,7 @@
 
 namespace ForumHouse\SelectelStorageApi\File;
 
+use finfo;
 use ForumHouse\SelectelStorageApi\Exception\UnexpectedError;
 use ForumHouse\SelectelStorageApi\File\Exception\FileNotExistsException;
 use ForumHouse\SelectelStorageApi\File\Exception\FileUnreadableException;
@@ -73,7 +74,9 @@ class File
     }
 
     /**
-     * @return string
+     * Gets file content type
+     *
+*@return string
      */
     public function getContentType()
     {
@@ -81,11 +84,30 @@ class File
     }
 
     /**
-     * @param string $contentType
+     * Sets file content type
+     *
+     * @param string $contentType Content type to set. If not provided - it will be guessed from $this->localName
      */
-    public function setContentType($contentType)
+    public function setContentType($contentType = null)
     {
+        if (empty($contentType)) {
+            $this->assertFileExists();
+            $contentType = $this->getMimeType($this->localName);
+        }
         $this->headers['Content-Type'] = $contentType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentDisposition()
+    {
+        return $this->headers['Content-Disposition'];
+    }
+
+    public function setContentDisposition($value)
+    {
+        $this->headers['Content-Disposition'] = $value;
     }
 
     /**
@@ -170,6 +192,20 @@ class File
         if (!is_readable($this->localName)) {
             throw new FileUnreadableException($this->localName);
         }
+    }
+
+    /**
+     * Returns MIME information about the file
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    protected function getMimeType($filename)
+    {
+        $info = new finfo(FILEINFO_MIME_TYPE);
+        $contentType = $info->file($filename);
+        return $contentType;
     }
 }
  
