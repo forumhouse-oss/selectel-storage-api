@@ -63,6 +63,7 @@ class StorageService
         $postBody = new PostBody();
         $postBody->addFile(new PostFile(basename($file->getLocalName()), $file->openLocal('r')));
         $request->setBody($postBody);
+        $request->addHeaders($file->getHeaders());
         /** @var ResponseInterface $response */
         $response = $this->httpClient->send($request);
         $statusCode = $response->getStatusCode();
