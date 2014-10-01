@@ -150,7 +150,7 @@ class CredentialsAuthentication implements IAuthentication
         }
 
         $this->expireAuthToken = $headers['X-Expire-Auth-Token'][0];
-        $this->storageUrl = $headers['X-Storage-Url'][0];
+        $this->storageUrl = trim($headers['X-Storage-Url'][0], '/');
         $this->authToken = $headers['X-Auth-Token'][0];
     }
 }
