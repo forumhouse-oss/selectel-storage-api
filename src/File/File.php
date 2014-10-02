@@ -2,10 +2,10 @@
 
 namespace ForumHouse\SelectelStorageApi\File;
 
-use finfo;
 use ForumHouse\SelectelStorageApi\Exception\UnexpectedError;
 use ForumHouse\SelectelStorageApi\File\Exception\FileNotExistsException;
 use ForumHouse\SelectelStorageApi\File\Exception\FileUnreadableException;
+use ForumHouse\SelectelStorageApi\Utility\FS;
 
 /**
  * Object, representing a file in a storage
@@ -80,6 +80,34 @@ class File
     }
 
     /**
+     * Returns ETag header
+     *
+     * @return string
+     */
+    public function getMd5()
+    {
+        return $this->headers['ETag'];
+    }
+
+    /**
+     * Sets ETag header
+     *
+     * @param string $value
+     *
+     * @return $this
+     * @throws FileNotExistsException
+     */
+    public function setMd5($value = null)
+    {
+        if (empty($value)) {
+            $this->assertFileExists();
+            $value = md5_file($this->localName);
+        }
+        $this->headers['ETag'] = $value;
+        return $this;
+    }
+
+    /**
      * Gets file content type
      *
      * @return string
@@ -100,7 +128,7 @@ class File
     {
         if (empty($contentType)) {
             $this->assertFileExists();
-            $contentType = $this->getMimeType($this->localName);
+            $contentType = FS::getFileMimeType($this->localName);
         }
         $this->headers['Content-Type'] = $contentType;
         return $this;
@@ -213,19 +241,5 @@ class File
         if (!is_readable($this->localName)) {
             throw new FileUnreadableException($this->localName);
         }
-    }
-
-    /**
-     * Returns MIME information about the file
-     *
-     * @param string $filename
-     *
-     * @return string
-     */
-    protected function getMimeType($filename)
-    {
-        $info = new finfo(FILEINFO_MIME_TYPE);
-        $contentType = $info->file($filename);
-        return $contentType;
     }
 }
