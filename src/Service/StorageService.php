@@ -100,16 +100,18 @@ class StorageService
     }
 
     /**
-     * @param string    $method
-     * @param Container $container
-     * @param File      $file
+     * @param string    $method    HTTP method
+     * @param Container $container Container for the request
+     * @param File      $file      File for the request
+     * @param array     $options   HTTP request options
      *
+     * @throws \Exception
      * @return \GuzzleHttp\Message\RequestInterface
      */
     protected function createHttpRequest($method, Container $container, File $file)
     {
-        $request = $this->httpClient->createRequest($method,
-            $this->authentication->getStorageUrl() . '/' . $container->getName() . '/' . $file->getServerName());
+        $url = $this->authentication->getStorageUrl() . '/' . $container->getName() . '/' . $file->getServerName();
+        $request = $this->httpClient->createRequest($method, $url, ['exceptions' => false]);
         $request->addHeader('X-Auth-Token', $this->authentication->getAuthToken());
         return $request;
     }
