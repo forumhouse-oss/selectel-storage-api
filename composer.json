@@ -1,5 +1,5 @@
 {
-    "name": "ForumHouseTeam/selectel-storage-api",
+    "name": "forumhouseteam/selectel-storage-api",
     "description": "Selectel Storage API for PHP",
     "minimum-stability": "stable",
     "license": "GPL-2.0",
