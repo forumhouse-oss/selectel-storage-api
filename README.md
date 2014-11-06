@@ -3,8 +3,6 @@ selectel-storage-api
 
 Selectel Cloud Storage API.
 
-This repository represents work in progress. No stable version released yet.
-
 
 An example of use
 ====================
@@ -14,13 +12,7 @@ Composer setup
 ```
     "require": {
         "forumhouseteam/selectel-storage-api": "dev-master"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/ForumHouseTeam/selectel-storage-api"
-        }
-    ]
+    }
 ```
 
 Uploading a file
