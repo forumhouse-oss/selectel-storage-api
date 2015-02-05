@@ -16,8 +16,6 @@ class Container
 
     /**
      * @param string $name
-     *
-     * @internal param IAuthentication $authentication
      */
     public function __construct($name)
     {
