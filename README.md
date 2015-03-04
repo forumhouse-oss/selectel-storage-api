@@ -9,9 +9,13 @@ An example of use
 
 Composer setup
 -------------------
+
+*Please do note, that package name changed to `fhteam/selectel-storage-api`.* Old name should still work, though
+it will no longer be maintained.
+
 ```
     "require": {
-        "forumhouseteam/selectel-storage-api": "dev-master"
+        "fhteam/selectel-storage-api": "dev-master"
     }
 ```
 
