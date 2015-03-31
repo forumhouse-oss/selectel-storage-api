@@ -13,7 +13,7 @@ class UnexpectedHttpStatusException extends AbstractSelectelStorageException
      * Constructor
      *
      * @param int $statusCode    HTTP status code
-     * @param int $reasonMessage HTTP Reason message, describing status code
+     * @param string $reasonMessage HTTP Reason message, describing status code
      */
     public function __construct($statusCode, $reasonMessage)
     {

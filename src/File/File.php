@@ -6,13 +6,14 @@ use ForumHouse\SelectelStorageApi\Exception\UnexpectedError;
 use ForumHouse\SelectelStorageApi\File\Exception\FileNotExistsException;
 use ForumHouse\SelectelStorageApi\File\Exception\FileUnreadableException;
 use ForumHouse\SelectelStorageApi\Utility\FS;
+use JsonSerializable;
 
 /**
  * Object, representing a file in a storage
  *
  * @package ForumHouse\SelectelStorageApi
  */
-class File
+class File implements JsonSerializable, ServerResourceInterface
 {
     /**
      * @var string Name of the file in the container
@@ -46,13 +47,14 @@ class File
     }
 
     /**
-     * @param string $containerName
+     * @param string $value
      *
      * @return $this
      */
-    public function setServerName($containerName)
+    public function setServerName($value)
     {
-        $this->serverName = $containerName;
+        $this->serverName = $value;
+
         return $this;
     }
 
@@ -65,17 +67,18 @@ class File
     }
 
     /**
-     * @param int $size
+     * @param int $value
      *
      * @return $this
      */
-    public function setSize($size = null)
+    public function setSize($value = null)
     {
-        if (empty($size)) {
+        if (empty($value)) {
             $this->assertFileExists();
-            $size = filesize($this->localName);
+            $value = filesize($this->localName);
         }
-        $this->headers['Content-Length'] = $size;
+        $this->headers['Content-Length'] = $value;
+
         return $this;
     }
 
@@ -104,6 +107,7 @@ class File
             $value = md5_file($this->localName);
         }
         $this->headers['ETag'] = $value;
+
         return $this;
     }
 
@@ -120,17 +124,18 @@ class File
     /**
      * Sets file content type
      *
-     * @param string $contentType Content type to set. If not provided - it will be guessed from $this->localName
+     * @param string $value Content type to set. If not provided - it will be guessed from $this->localName
      *
      * @return $this
      */
-    public function setContentType($contentType = null)
+    public function setContentType($value = null)
     {
-        if (empty($contentType)) {
+        if (empty($value)) {
             $this->assertFileExists();
-            $contentType = FS::getFileMimeType($this->localName);
+            $value = FS::getFileMimeType($this->localName);
         }
-        $this->headers['Content-Type'] = $contentType;
+        $this->headers['Content-Type'] = $value;
+
         return $this;
     }
 
@@ -150,6 +155,7 @@ class File
     public function setContentDisposition($value)
     {
         $this->headers['Content-Disposition'] = $value;
+
         return $this;
     }
 
@@ -166,13 +172,14 @@ class File
     /**
      * Sets http file headers for a file
      *
-     * @param string[] $headers
+     * @param string[] $value
      *
      * @return $this
      */
-    public function setHeaders(array $headers)
+    public function setHeaders(array $value)
     {
-        $this->headers = $headers;
+        $this->headers = $value;
+
         return $this;
     }
 
@@ -185,13 +192,14 @@ class File
     }
 
     /**
-     * @param string $localName
+     * @param string $value
      *
      * @return $this
      */
-    public function setLocalName($localName)
+    public function setLocalName($value)
     {
-        $this->localName = $localName;
+        $this->localName = $value;
+
         return $this;
     }
 
@@ -241,5 +249,22 @@ class File
         if (!is_readable($this->localName)) {
             throw new FileUnreadableException($this->localName);
         }
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.4.0)<br/>
+     * Specify data which should be serialized to JSON
+     *
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     *       which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'serverName' => $this->serverName,
+            'localName' => $this->localName,
+            'headers' => $this->headers,
+        ];
     }
 }
