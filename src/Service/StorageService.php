@@ -85,11 +85,12 @@ class StorageService
      *
      * @param Container $container
      * @param File[]    $files
+     * @param bool      $atomically
      *
      * @return bool
      * @throws ParallelOperationException
      */
-    public function uploadFiles(Container $container, array $files)
+    public function uploadFiles(Container $container, array $files, $atomically)
     {
         $requests = [];
         $objects = [];
@@ -104,11 +105,13 @@ class StorageService
             return;
         }
 
-        foreach ($result['ok'] as $file) {
-            try {
-                $this->deleteFile($container, $file);
-            } catch (Exception $e) {
-                //Silent
+        if ($atomically) {
+            foreach ($result['ok'] as $file) {
+                try {
+                    $this->deleteFile($container, $file);
+                } catch (Exception $e) {
+                    //Silent
+                }
             }
         }
 
