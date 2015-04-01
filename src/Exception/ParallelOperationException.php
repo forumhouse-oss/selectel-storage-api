@@ -31,4 +31,12 @@ class ParallelOperationException extends AbstractSelectelStorageException
             )
         );
     }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
 }
