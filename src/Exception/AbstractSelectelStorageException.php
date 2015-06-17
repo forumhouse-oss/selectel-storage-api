@@ -11,4 +11,3 @@ class AbstractSelectelStorageException extends Exception
 {
 
 }
- 

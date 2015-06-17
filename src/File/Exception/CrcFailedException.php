@@ -10,5 +10,3 @@ class CrcFailedException extends AbstractSelectelStorageException
         parent::__construct("CRC check for file '$filename' failed");
     }
 }
-
- 

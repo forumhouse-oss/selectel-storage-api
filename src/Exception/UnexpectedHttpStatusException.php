@@ -18,4 +18,3 @@ class UnexpectedHttpStatusException extends AbstractSelectelStorageException
         parent::__construct(sprintf("Unexpected HTTP status [%s]: %s", $statusCode, $reasonMessage), $statusCode);
     }
 }
- 

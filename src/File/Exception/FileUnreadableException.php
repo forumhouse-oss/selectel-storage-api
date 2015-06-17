@@ -6,4 +6,3 @@ class FileUnreadableException extends AbstractSelectelStorageException
 {
 
 }
- 

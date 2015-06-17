@@ -10,4 +10,3 @@ class FileNotExistsException extends AbstractSelectelStorageException
         parent::__construct("File '$filename' does not exist");
     }
 }
- 

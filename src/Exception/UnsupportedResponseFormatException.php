@@ -4,4 +4,3 @@ class UnsupportedResponseFormatException extends AbstractSelectelStorageExceptio
 {
 
 }
- 

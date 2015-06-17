@@ -9,15 +9,14 @@ use ForumHouse\SelectelStorageApi\File\Exception\CrcFailedException;
 use ForumHouse\SelectelStorageApi\File\File;
 use ForumHouse\SelectelStorageApi\File\ServerResourceInterface;
 use ForumHouse\SelectelStorageApi\File\SymLink;
-use ForumHouse\SelectelStorageApi\Utility\HttpClient;
+use ForumHouse\SelectelStorageApi\Utility\Http\BatchPool;
+use ForumHouse\SelectelStorageApi\Utility\Http\HttpClient;
 use ForumHouse\SelectelStorageApi\Utility\Response;
 use GuzzleHttp\Message\RequestInterface;
 use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Pool;
 use GuzzleHttp\Post\PostBodyInterface;
 use GuzzleHttp\Post\PostFile;
-use JsonSerializable;
-use SplObjectStorage;
+use League\Url\Url;
 
 /**
  * Selectel storage service class
@@ -96,8 +95,8 @@ class StorageService
             $requests[] = $this->createRequestUploadFile($container, $file);
             $objects[] = $file;
         }
-
-        $result = $this->getPoolResults($requests, $objects, [Response::HTTP_CREATED]);
+        $pool = new BatchPool($requests, $objects, [Response::HTTP_CREATED]);
+        $result = $pool->send();
 
         if (count($result['failed']) < 1) {
             return;
@@ -155,7 +154,8 @@ class StorageService
             $objects[] = $file;
         }
 
-        $result = $this->getPoolResults($requests, $objects, [Response::HTTP_NO_CONTENT, Response::HTTP_NOT_FOUND]);
+        $pool = new BatchPool($requests, $objects, [Response::HTTP_NO_CONTENT, Response::HTTP_NOT_FOUND]);
+        $result = $pool->send();
 
         if (count($result['failed']) < 1) {
             return;
@@ -175,6 +175,8 @@ class StorageService
      */
     public function createSymlink(Container $container, SymLink $link)
     {
+        //TODO: add ability to provide symlink file name
+
         $request = $this->createRequestMakeSymlink($container, $link);
 
         /** @var ResponseInterface $response */
@@ -196,6 +198,8 @@ class StorageService
      */
     public function createSymLinks(Container $container, array $links)
     {
+        //TODO: add ability to provide symlink file name
+
         $requests = [];
         $objects = [];
         foreach ($links as $link) {
@@ -203,13 +207,54 @@ class StorageService
             $objects[] = $link;
         }
 
-        $result = $this->getPoolResults($requests, $objects, [Response::HTTP_CREATED]);
+        $pool = new BatchPool($requests, $objects, [Response::HTTP_CREATED]);
+        $result = $pool->send();
 
         if (count($result['failed']) < 1) {
             return;
         }
 
         throw new ParallelOperationException('deleteFiles', $result['failed']);
+    }
+
+    /**
+     * WARNING: this method sets account secret key for ALL containers of the account
+     *
+     * @param string $secretKey
+     *
+     * @throws UnexpectedHttpStatusException
+     */
+    public function setAccountSecretKey($secretKey)
+    {
+        $url = $this->authentication->getStorageUrl();
+        $request = $this->httpClient->createRequest('post', $url);
+        $request->addHeader('X-Auth-Token', $this->authentication->getAuthToken());
+        $request->addHeader('X-Account-Meta-Temp-URL-Key', $secretKey);
+
+        $response = $this->httpClient->send($request);
+        if ($response->getStatusCode() !== Response::HTTP_NO_CONTENT) {
+            throw new UnexpectedHttpStatusException($response->getStatusCode(), "Only HTTP_NO_CONTENT is expected");
+        }
+    }
+
+    /**
+     * @param string $url       Url to generate access link for
+     * @param int    $expires   Unix timestamp at which link should expire
+     * @param string $secretKey The secret key set for file container
+     *
+     * @return string Url with embedded signature
+     */
+    public function signFileDownloadLink($url, $expires, $secretKey)
+    {
+        $method = 'GET';
+        $url = Url::createFromUrl($url);
+        $path = $url->getRelativeUrl();
+        $body = sprintf("%s\n%s\n%s", $method, $expires, $path);
+        $signature = hash_hmac('sha1', $body, $secretKey);
+
+        $url->getQuery()->modify(['temp_url_sig' => $signature, 'temp_url_expires' => $expires]);
+
+        return (string)$url;
     }
 
     /**
@@ -261,39 +306,5 @@ class StorageService
         $request->addHeaders($link->getHeaders());
 
         return $request;
-    }
-
-    /**
-     * @param array|RequestInterface[]|SplObjectStorage $requests
-     * @param array|JsonSerializable[]                  $objects
-     * @param int[]                                     $validResponses
-     *
-     * @return array Array with 'ok' and 'failed' keys
-     */
-    protected function getPoolResults(array $requests, array $objects, array $validResponses)
-    {
-        $responses = Pool::batch($this->httpClient, $requests);
-
-        $result = [
-            'ok' => [],
-            'failed' => [],
-        ];
-
-        /** @var ResponseInterface $response */
-        foreach ($responses as $key => $response) {
-            if (in_array($response->getStatusCode(), $validResponses)) {
-                $result['ok'][] = $objects[$key];
-                continue;
-            }
-
-            $result['failed'][] = [
-                $response->getEffectiveUrl(),
-                $objects[$key],
-                $response->getStatusCode(),
-                $response->getReasonPhrase(),
-            ];
-        }
-
-        return $result;
     }
 }

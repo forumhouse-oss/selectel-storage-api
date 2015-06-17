@@ -13,4 +13,3 @@ class AuthenticationRequiredException extends AbstractSelectelStorageException
 {
 
 }
- 

@@ -5,7 +5,7 @@ use ForumHouse\SelectelStorageApi\Authentication\Exception\AuthenticationRequire
 use ForumHouse\SelectelStorageApi\Exception\UnexpectedHttpStatusException;
 use ForumHouse\SelectelStorageApi\Exception\UnsupportedResponseFormatException;
 use ForumHouse\SelectelStorageApi\Utility\Arr;
-use ForumHouse\SelectelStorageApi\Utility\HttpClient;
+use ForumHouse\SelectelStorageApi\Utility\Http\HttpClient;
 use ForumHouse\SelectelStorageApi\Utility\Response;
 
 /**

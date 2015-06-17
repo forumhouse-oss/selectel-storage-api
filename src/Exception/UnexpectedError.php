@@ -4,4 +4,3 @@ class UnexpectedError extends AbstractSelectelStorageException
 {
 
 }
- 
