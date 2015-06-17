@@ -1,6 +1,4 @@
-<?php
-
-namespace ForumHouse\SelectelStorageApi\Utility;
+<?php namespace ForumHouse\SelectelStorageApi\Utility;
 
 /**
  * Array utilities class
@@ -31,12 +29,16 @@ class Arr
      */
     public static function findEmpty(array $array)
     {
-        return array_filter($array, function ($value) {
-            if (empty($value)) {
-                return true;
+        return array_filter(
+            $array,
+            function ($value) {
+                if (empty($value)) {
+                    return true;
+                }
+
+                return false;
             }
-            return false;
-        });
+        );
     }
 }
  

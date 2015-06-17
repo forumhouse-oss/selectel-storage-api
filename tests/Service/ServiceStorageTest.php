@@ -1,6 +1,4 @@
-<?php
-
-namespace ForumHouse\SelectelStorageApi\Test\ServiceStorage;
+<?php namespace ForumHouse\SelectelStorageApi\Test\ServiceStorage;
 
 use Exception;
 use ForumHouse\SelectelStorageApi\Authentication\CredentialsAuthentication;

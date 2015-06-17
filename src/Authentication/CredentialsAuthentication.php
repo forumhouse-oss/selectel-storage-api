@@ -1,6 +1,4 @@
-<?php
-
-namespace ForumHouse\SelectelStorageApi\Authentication;
+<?php namespace ForumHouse\SelectelStorageApi\Authentication;
 
 use ForumHouse\SelectelStorageApi\Authentication\Exception\AuthenticationFailedException;
 use ForumHouse\SelectelStorageApi\Authentication\Exception\AuthenticationRequiredException;
@@ -65,18 +63,21 @@ class CredentialsAuthentication implements IAuthentication
     public function getAuthToken()
     {
         $this->assertAuthenticated();
+
         return $this->authToken;
     }
 
     public function getStorageUrl()
     {
         $this->assertAuthenticated();
+
         return $this->storageUrl;
     }
 
     public function getExpireAuthToken()
     {
         $this->assertAuthenticated();
+
         return $this->expireAuthToken;
     }
 
@@ -115,6 +116,7 @@ class CredentialsAuthentication implements IAuthentication
     public function exportAuthenticationData()
     {
         $this->assertAuthenticated();
+
         return array(
             'authToken' => $this->authToken,
             'storageUrl' => $this->storageUrl,
@@ -145,8 +147,12 @@ class CredentialsAuthentication implements IAuthentication
     {
         $absentKeys = Arr::findAbsent($headers, array('X-Expire-Auth-Token', 'X-Storage-Url', 'X-Auth-Token'));
         if (!empty($absentKeys)) {
-            throw new UnsupportedResponseFormatException("Authentication response has the following data absent: " . implode(', ',
-                    $absentKeys));
+            throw new UnsupportedResponseFormatException(
+                "Authentication response has the following data absent: ".implode(
+                    ', ',
+                    $absentKeys
+                )
+            );
         }
 
         $this->expireAuthToken = $headers['X-Expire-Auth-Token'][0];

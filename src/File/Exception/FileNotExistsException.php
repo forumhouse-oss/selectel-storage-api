@@ -1,6 +1,4 @@
-<?php
-
-namespace ForumHouse\SelectelStorageApi\File\Exception;
+<?php namespace ForumHouse\SelectelStorageApi\File\Exception;
 
 use ForumHouse\SelectelStorageApi\Exception\AbstractSelectelStorageException;
 

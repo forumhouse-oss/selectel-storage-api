@@ -1,6 +1,4 @@
-<?php
-
-namespace ForumHouse\SelectelStorageApi\Service;
+<?php namespace ForumHouse\SelectelStorageApi\Service;
 
 use Exception;
 use ForumHouse\SelectelStorageApi\Authentication\IAuthentication;
@@ -289,9 +287,10 @@ class StorageService
             }
 
             $result['failed'][] = [
+                $response->getEffectiveUrl(),
                 $objects[$key],
                 $response->getStatusCode(),
-                $response->getReasonPhrase()
+                $response->getReasonPhrase(),
             ];
         }
 

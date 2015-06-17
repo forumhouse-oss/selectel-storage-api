@@ -1,6 +1,4 @@
-<?php
-
-namespace ForumHouse\SelectelStorageApi\Utility;
+<?php namespace ForumHouse\SelectelStorageApi\Utility;
 
 use GuzzleHttp\Client;
 

@@ -1,6 +1,4 @@
-<?php
-
-namespace ForumHouse\SelectelStorageApi\Exception;
+<?php namespace ForumHouse\SelectelStorageApi\Exception;
 
 /**
  * Exception indicating an error during some parallel HTTP operation

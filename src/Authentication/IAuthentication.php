@@ -1,6 +1,4 @@
-<?php
-
-namespace ForumHouse\SelectelStorageApi\Authentication;
+<?php namespace ForumHouse\SelectelStorageApi\Authentication;
 
 /**
  * Authentication interface

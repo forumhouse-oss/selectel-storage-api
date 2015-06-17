@@ -1,8 +1,7 @@
-<?php
-namespace ForumHouse\SelectelStorageApi\Utility;
+<?php namespace ForumHouse\SelectelStorageApi\Utility;
 
 /**
- * Http response codes
+ * Http response codes. Copied from Symfony Http Component
  */
 class Response
 {

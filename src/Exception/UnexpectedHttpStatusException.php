@@ -1,6 +1,4 @@
-<?php
-
-namespace ForumHouse\SelectelStorageApi\Exception;
+<?php namespace ForumHouse\SelectelStorageApi\Exception;
 
 /**
  * Unexpected HTTP status exception
@@ -12,7 +10,7 @@ class UnexpectedHttpStatusException extends AbstractSelectelStorageException
     /**
      * Constructor
      *
-     * @param int $statusCode    HTTP status code
+     * @param int    $statusCode    HTTP status code
      * @param string $reasonMessage HTTP Reason message, describing status code
      */
     public function __construct($statusCode, $reasonMessage)

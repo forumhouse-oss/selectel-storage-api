@@ -1,6 +1,4 @@
-<?php
-
-namespace ForumHouse\SelectelStorageApi\File;
+<?php namespace ForumHouse\SelectelStorageApi\File;
 
 use ForumHouse\SelectelStorageApi\Exception\UnexpectedError;
 use ForumHouse\SelectelStorageApi\File\Exception\FileNotExistsException;

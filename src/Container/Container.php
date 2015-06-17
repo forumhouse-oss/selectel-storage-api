@@ -1,6 +1,4 @@
-<?php
-
-namespace ForumHouse\SelectelStorageApi\Container;
+<?php namespace ForumHouse\SelectelStorageApi\Container;
 
 /**
  * Class representing Selectel storage container
@@ -31,6 +29,7 @@ class Container
         if (empty($this->name)) {
             throw new \Exception("Name for container is not set");
         }
+
         return $this->name;
     }
 
@@ -42,6 +41,7 @@ class Container
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 }

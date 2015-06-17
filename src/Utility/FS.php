@@ -1,6 +1,4 @@
-<?php
-
-namespace ForumHouse\SelectelStorageApi\Utility;
+<?php namespace ForumHouse\SelectelStorageApi\Utility;
 
 use Exception;
 use finfo;
@@ -22,6 +20,7 @@ class FS
         if (!$contentType) {
             throw new Exception("Unable to guess content type of '$filename'");
         }
+
         return $contentType;
     }
 }

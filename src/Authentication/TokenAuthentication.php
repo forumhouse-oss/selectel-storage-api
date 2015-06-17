@@ -1,6 +1,4 @@
-<?php
-
-namespace ForumHouse\SelectelStorageApi\Authentication;
+<?php namespace ForumHouse\SelectelStorageApi\Authentication;
 
 use ForumHouse\SelectelStorageApi\Utility\Arr;
 
@@ -68,8 +66,9 @@ class TokenAuthentication implements IAuthentication
     {
         $absentKeys = Arr::findAbsent($data, array('authToken', 'storageUrl', 'expireAuthToken'));
         if (!empty($absentKeys)) {
-            throw new \Exception("The following keys are absent in exported data: " . implode(', ', $absentKeys));
+            throw new \Exception("The following keys are absent in exported data: ".implode(', ', $absentKeys));
         }
+
         return new static($data['authToken'], $data['storageUrl'], $data['expireAuthToken']);
     }
 
