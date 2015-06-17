@@ -10,6 +10,7 @@ use ForumHouse\SelectelStorageApi\Exception\UnexpectedHttpStatusException;
 use ForumHouse\SelectelStorageApi\File\Exception\CrcFailedException;
 use ForumHouse\SelectelStorageApi\File\File;
 use ForumHouse\SelectelStorageApi\File\SymLink;
+use ForumHouse\SelectelStorageApi\Service\OfflineStorageService;
 use ForumHouse\SelectelStorageApi\Service\StorageService;
 use GuzzleHttp\Client;
 use PHPUnit_Framework_TestCase;
@@ -200,7 +201,7 @@ class ServiceStorageTest extends PHPUnit_Framework_TestCase
 
         //$this->service->setAccountSecretKey($this->containerSecretKey);
 
-        $signedUrl = $this->service->signFileDownloadLink(
+        $signedUrl = (new OfflineStorageService())->signFileDownloadLink(
             $this->containerUrl.'/'.$file->getServerName(),
             time() + 600,
             $this->containerSecretKey
