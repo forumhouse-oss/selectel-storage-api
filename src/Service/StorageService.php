@@ -11,12 +11,12 @@ use ForumHouse\SelectelStorageApi\File\ServerResourceInterface;
 use ForumHouse\SelectelStorageApi\File\SymLink;
 use ForumHouse\SelectelStorageApi\Utility\Http\BatchPool;
 use ForumHouse\SelectelStorageApi\Utility\Http\HttpClient;
+use ForumHouse\SelectelStorageApi\Utility\Http\HttpWrapper;
 use ForumHouse\SelectelStorageApi\Utility\Response;
 use GuzzleHttp\Message\RequestInterface;
 use GuzzleHttp\Message\ResponseInterface;
 use GuzzleHttp\Post\PostBodyInterface;
 use GuzzleHttp\Post\PostFile;
-use League\Url\Url;
 
 /**
  * Selectel storage service class
@@ -124,19 +124,11 @@ class StorageService
      */
     public function deleteFile(Container $container, File $file)
     {
-        $request = $this->createHttpRequest('delete', $container, $file);
+        $client = new HttpWrapper();
+        $client->setExpectedHttpCodes([Response::HTTP_NO_CONTENT, Response::HTTP_NOT_FOUND]);
+        $client->sendPlainHttpRequest('delete', $this->getServerResourceUrl($container, $file));
 
-        /** @var ResponseInterface $response */
-        $response = $this->httpClient->send($request);
-        $statusCode = $response->getStatusCode();
-        switch ($statusCode) {
-            case Response::HTTP_NO_CONTENT:
-                return true;
-            case Response::HTTP_NOT_FOUND:
-                return false;
-            default:
-                throw new UnexpectedHttpStatusException($statusCode, $response->getReasonPhrase());
-        }
+        return $client->getStatusCode() === Response::HTTP_NO_CONTENT ? true : false;
     }
 
     /**
@@ -235,6 +227,18 @@ class StorageService
         if ($response->getStatusCode() !== Response::HTTP_NO_CONTENT) {
             throw new UnexpectedHttpStatusException($response->getStatusCode(), "Only HTTP_NO_CONTENT is expected");
         }
+    }
+
+    /**
+     * @param Container               $container
+     * @param ServerResourceInterface $file
+     *
+     * @return string
+     * @throws Exception
+     */
+    protected function getServerResourceUrl(Container $container, ServerResourceInterface $file)
+    {
+        return $this->authentication->getStorageUrl().'/'.$container->getName().'/'.$file->getServerName();
     }
 
     /**

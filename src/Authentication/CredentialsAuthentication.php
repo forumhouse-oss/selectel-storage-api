@@ -5,7 +5,7 @@ use ForumHouse\SelectelStorageApi\Authentication\Exception\AuthenticationRequire
 use ForumHouse\SelectelStorageApi\Exception\UnexpectedHttpStatusException;
 use ForumHouse\SelectelStorageApi\Exception\UnsupportedResponseFormatException;
 use ForumHouse\SelectelStorageApi\Utility\Arr;
-use ForumHouse\SelectelStorageApi\Utility\Http\HttpClient;
+use ForumHouse\SelectelStorageApi\Utility\Http\HttpWrapper;
 use ForumHouse\SelectelStorageApi\Utility\Response;
 
 /**
@@ -89,23 +89,16 @@ class CredentialsAuthentication implements IAuthentication
      */
     public function authenticate()
     {
-        $client = new HttpClient();
-        $request = $client->createRequest('get', $this->authUrl);
-        $request->addHeader('X-Auth-User', $this->authUser);
-        $request->addHeader('X-Auth-Key', $this->authKey);
+        $client = new HttpWrapper();
+        $client->setExpectedHttpCodes([Response::HTTP_NO_CONTENT]);
+        $client->addCustomError(Response::HTTP_FORBIDDEN, AuthenticationFailedException::class);
+        $client->sendPlainHttpRequest(
+            'get',
+            $this->authUrl,
+            ['X-Auth-User' => $this->authUser, 'X-Auth-Key' => $this->authKey]
+        );
 
-        /** @var \GuzzleHttp\Message\ResponseInterface $response */
-        $response = $client->send($request);
-        $statusCode = $response->getStatusCode();
-        switch ($statusCode) {
-            case Response::HTTP_FORBIDDEN:
-                throw new AuthenticationFailedException();
-            case Response::HTTP_NO_CONTENT:
-                $this->importHeaders($response->getHeaders());
-                break;
-            default:
-                throw new UnexpectedHttpStatusException($statusCode, $response->getReasonPhrase());
-        }
+        $this->importHeaders($client->getResponseHeaders());
     }
 
     /**
