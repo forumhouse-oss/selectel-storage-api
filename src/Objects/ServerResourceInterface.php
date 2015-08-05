@@ -1,4 +1,4 @@
-<?php namespace ForumHouse\SelectelStorageApi\File;
+<?php namespace FHTeam\SelectelStorageApi\Objects;
 
 /**
  * Identifies something, that has server name (URL) on selectel server (URL part after domain and container)

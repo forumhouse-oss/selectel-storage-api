@@ -17,7 +17,12 @@
   },
   "autoload": {
     "psr-4": {
-      "ForumHouse\\SelectelStorageApi\\": "src/"
+      "FHTeam\\SelectelStorageApi\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "FHTeam\\SelectelStorageApi\\Test\\": "tests/src/"
     }
   }
 }

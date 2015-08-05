@@ -1,4 +1,4 @@
-<?php namespace ForumHouse\SelectelStorageApi\Exception;
+<?php namespace FHTeam\SelectelStorageApi\Exception;
 
 use Exception;
 

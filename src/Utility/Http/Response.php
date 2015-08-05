@@ -1,4 +1,4 @@
-<?php namespace ForumHouse\SelectelStorageApi\Utility;
+<?php namespace FHTeam\SelectelStorageApi\Utility\Http;
 
 /**
  * Http response codes. Copied from Symfony Http Component

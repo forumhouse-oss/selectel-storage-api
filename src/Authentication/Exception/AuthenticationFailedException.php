@@ -1,8 +1,8 @@
 <?php
 
-namespace ForumHouse\SelectelStorageApi\Authentication\Exception;
+namespace FHTeam\SelectelStorageApi\Authentication\Exception;
 
-use ForumHouse\SelectelStorageApi\Exception\AbstractSelectelStorageException;
+use FHTeam\SelectelStorageApi\Exception\AbstractSelectelStorageException;
 
 class AuthenticationFailedException extends AbstractSelectelStorageException
 {

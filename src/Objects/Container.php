@@ -1,4 +1,4 @@
-<?php namespace ForumHouse\SelectelStorageApi\Container;
+<?php namespace FHTeam\SelectelStorageApi\Objects;
 
 /**
  * Class representing Selectel storage container

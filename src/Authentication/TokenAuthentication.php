@@ -1,6 +1,6 @@
-<?php namespace ForumHouse\SelectelStorageApi\Authentication;
+<?php namespace FHTeam\SelectelStorageApi\Authentication;
 
-use ForumHouse\SelectelStorageApi\Utility\Arr;
+use FHTeam\SelectelStorageApi\Utility\Arr;
 
 /**
  * Class does not perform any authentication. Instead, it assumes, authentication was done some time ago and

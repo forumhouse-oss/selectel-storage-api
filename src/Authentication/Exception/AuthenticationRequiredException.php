@@ -1,8 +1,8 @@
 <?php
 
-namespace ForumHouse\SelectelStorageApi\Authentication\Exception;
+namespace FHTeam\SelectelStorageApi\Authentication\Exception;
 
-use ForumHouse\SelectelStorageApi\Exception\AbstractSelectelStorageException;
+use FHTeam\SelectelStorageApi\Exception\AbstractSelectelStorageException;
 
 /**
  * When authentication was required, but was not performed

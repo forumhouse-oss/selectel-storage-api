@@ -1,12 +1,13 @@
-<?php namespace ForumHouse\SelectelStorageApi\Authentication;
+<?php namespace FHTeam\SelectelStorageApi\Authentication;
 
-use ForumHouse\SelectelStorageApi\Authentication\Exception\AuthenticationFailedException;
-use ForumHouse\SelectelStorageApi\Authentication\Exception\AuthenticationRequiredException;
-use ForumHouse\SelectelStorageApi\Exception\UnexpectedHttpStatusException;
-use ForumHouse\SelectelStorageApi\Exception\UnsupportedResponseFormatException;
-use ForumHouse\SelectelStorageApi\Utility\Arr;
-use ForumHouse\SelectelStorageApi\Utility\Http\HttpWrapper;
-use ForumHouse\SelectelStorageApi\Utility\Response;
+use FHTeam\SelectelStorageApi\Authentication\Exception\AuthenticationFailedException;
+use FHTeam\SelectelStorageApi\Authentication\Exception\AuthenticationRequiredException;
+use FHTeam\SelectelStorageApi\Exception\UnexpectedHttpStatusException;
+use FHTeam\SelectelStorageApi\Exception\UnsupportedResponseFormatException;
+use FHTeam\SelectelStorageApi\Utility\Arr;
+use FHTeam\SelectelStorageApi\Utility\Http\HttpClient;
+use FHTeam\SelectelStorageApi\Utility\Http\HttpRequest;
+use FHTeam\SelectelStorageApi\Utility\Http\Response;
 
 /**
  * Class performing authentication with a Selectel endpoint. All data received from endpoint is saved as instance
@@ -89,16 +90,13 @@ class CredentialsAuthentication implements IAuthentication
      */
     public function authenticate()
     {
-        $client = new HttpWrapper();
-        $client->setExpectedHttpCodes([Response::HTTP_NO_CONTENT]);
-        $client->addCustomError(Response::HTTP_FORBIDDEN, AuthenticationFailedException::class);
-        $client->sendPlainHttpRequest(
-            'get',
-            $this->authUrl,
-            ['X-Auth-User' => $this->authUser, 'X-Auth-Key' => $this->authKey]
-        );
-
-        $this->importHeaders($client->getResponseHeaders());
+        $client = new HttpClient();
+        $client->setGoodHttpStatusCodes([Response::HTTP_NO_CONTENT]);
+        $client->setCustomErrors([Response::HTTP_FORBIDDEN => AuthenticationFailedException::class]);
+        $request = new HttpRequest($client, HttpRequest::METHOD_GET, $this->authUrl);
+        $request->setRequestHeaders(['X-Auth-User' => $this->authUser, 'X-Auth-Key' => $this->authKey]);
+        $client->send($request);
+        $this->importHeaders($request->getResponseHeaders());
     }
 
     /**

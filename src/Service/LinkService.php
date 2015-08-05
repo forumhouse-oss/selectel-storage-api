@@ -1,4 +1,4 @@
-<?php namespace ForumHouse\SelectelStorageApi\Service;
+<?php namespace FHTeam\SelectelStorageApi\Service;
 
 use League\Url\Url;
 
@@ -7,7 +7,7 @@ use League\Url\Url;
  *
  * @package ForumHouse\SelectelStorageApi\Service
  */
-class OfflineStorageService
+class LinkService
 {
     /**
      * @param string $url       Url to generate access link for

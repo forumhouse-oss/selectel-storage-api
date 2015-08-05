@@ -1,9 +1,9 @@
-<?php namespace ForumHouse\SelectelStorageApi\File;
+<?php namespace FHTeam\SelectelStorageApi\Objects;
 
-use ForumHouse\SelectelStorageApi\Exception\UnexpectedError;
-use ForumHouse\SelectelStorageApi\File\Exception\FileNotExistsException;
-use ForumHouse\SelectelStorageApi\File\Exception\FileUnreadableException;
-use ForumHouse\SelectelStorageApi\Utility\FS;
+use FHTeam\SelectelStorageApi\Exception\FileNotExistsException;
+use FHTeam\SelectelStorageApi\Exception\FileUnreadableException;
+use FHTeam\SelectelStorageApi\Exception\UnexpectedError;
+use FHTeam\SelectelStorageApi\Utility\FS;
 use JsonSerializable;
 
 /**

@@ -1,4 +1,4 @@
-<?php namespace ForumHouse\SelectelStorageApi\File;
+<?php namespace FHTeam\SelectelStorageApi\Objects;
 
 use Exception;
 use JsonSerializable;
