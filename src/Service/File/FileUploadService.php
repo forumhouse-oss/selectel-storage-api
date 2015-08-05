@@ -96,7 +96,7 @@ class FileUploadService extends AbstractService
         $url = UrlTools::getServerResourceUrl($this->authentication, $container, $file);
         $request = new HttpRequest($client, HttpRequest::METHOD_PUT, $url);
         $request->setRequestHeaders($file->getHeaders());
-        $request->setBodyFromFile($file->getLocalName());
+        $request->setRequestBodyFromFile($file->getLocalName());
         $request->addRequestHeader('X-Auth-Token', $this->authentication->getAuthToken());
 
         $client->setGoodHttpStatusCodes([Response::HTTP_CREATED]);

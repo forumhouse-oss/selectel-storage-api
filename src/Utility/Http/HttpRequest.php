@@ -45,7 +45,7 @@ class HttpRequest
     public function __construct(HttpClient $client, $method, $url)
     {
         $this->httpClient = $client;
-        $this->guzzleRequest = $this->httpClient->createGuzzleRequest($method, $url, ['exceptions' => false]);
+        $this->guzzleRequest = $this->httpClient->createGuzzleRequest($method, $url);
     }
 
     /**
@@ -56,6 +56,15 @@ class HttpRequest
         return $this->guzzleResponse->getStatusCode();
     }
 
+    public function getResponseBody()
+    {
+        if (null === $this->guzzleResponse->getBody()) {
+            throw new UnexpectedError("Guzzle response doesn't have body");
+        }
+
+        return $this->guzzleResponse->getBody()->getContents();
+    }
+
     /**
      * @param array $headers
      */
@@ -64,6 +73,10 @@ class HttpRequest
         $this->guzzleRequest->setHeaders($headers);
     }
 
+    /**
+     * @param string $name
+     * @param string $value
+     */
     public function addRequestHeader($name, $value)
     {
         $this->guzzleRequest->addHeader($name, $value);
@@ -82,7 +95,7 @@ class HttpRequest
      *
      * @throws UnexpectedError
      */
-    public function setBodyFromFile($fileName)
+    public function setRequestBodyFromFile($fileName)
     {
         $handle = fopen($fileName, 'r');
         if (!$handle) {
