@@ -1,9 +1,10 @@
 <?php namespace FHTeam\SelectelStorageApi\Utility\Http;
 
 use FHTeam\SelectelStorageApi\Exception\UnexpectedError;
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Post\PostFile;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Stream;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class HttpRequest
@@ -45,7 +46,7 @@ class HttpRequest
     public function __construct(HttpClient $client, $method, $url)
     {
         $this->httpClient = $client;
-        $this->guzzleRequest = $this->httpClient->createGuzzleRequest($method, $url);
+        $this->guzzleRequest = new Request($method, $url);
     }
 
     /**
@@ -70,7 +71,9 @@ class HttpRequest
      */
     public function setRequestHeaders(array $headers)
     {
-        $this->guzzleRequest->setHeaders($headers);
+        foreach ($headers as $headerName => $headerValue) {
+            $this->guzzleRequest = $this->guzzleRequest->withAddedHeader($headerName, $headerValue);
+        }
     }
 
     /**
@@ -79,7 +82,7 @@ class HttpRequest
      */
     public function addRequestHeader($name, $value)
     {
-        $this->guzzleRequest->addHeader($name, $value);
+        $this->guzzleRequest = $this->guzzleRequest->withAddedHeader($name, $value);
     }
 
     /**
@@ -102,9 +105,7 @@ class HttpRequest
             throw new UnexpectedError("Cannot open file '{$fileName}' due to unknown error");
         }
 
-        $postFile = new PostFile(basename($fileName), $handle);
-        $body = $postFile->getContent();
-        $this->guzzleRequest->setBody($body);
+        $this->guzzleRequest = $this->guzzleRequest->withBody(new Stream($handle));
     }
 
     /**
@@ -113,14 +114,6 @@ class HttpRequest
     public function getGuzzleRequest()
     {
         return $this->guzzleRequest;
-    }
-
-    /**
-     * @param RequestInterface $guzzleRequest
-     */
-    public function setGuzzleRequest($guzzleRequest)
-    {
-        $this->guzzleRequest = $guzzleRequest;
     }
 
     /**

@@ -4,9 +4,9 @@ use Exception;
 use FHTeam\SelectelStorageApi\Exception\UnexpectedHttpStatusException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Message\ResponseInterface;
 use GuzzleHttp\Pool;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class HttpWrapper
@@ -36,11 +36,6 @@ class HttpClient
     public function __construct()
     {
         $this->guzzleClient = new Client();
-    }
-
-    public function createGuzzleRequest($method, $url)
-    {
-        return $this->guzzleClient->createRequest($method, $url, ['exceptions' => false]);
     }
 
     /**
@@ -75,7 +70,7 @@ class HttpClient
     public function send(HttpRequest $request)
     {
         $guzzleRequest = $request->getGuzzleRequest();
-        $guzzleResponse = $this->guzzleClient->send($guzzleRequest);
+        $guzzleResponse = $this->guzzleClient->send($guzzleRequest, ['http_errors' => false]);
         $request->setGuzzleResponse($guzzleResponse);
 
         $statusCode = $guzzleResponse->getStatusCode();
@@ -87,7 +82,7 @@ class HttpClient
         throw $this->getException(
             $statusCode,
             $guzzleRequest->getMethod(),
-            $guzzleRequest->getUrl(),
+            (string)$guzzleRequest->getUri(),
             $guzzleResponse->getHeaders()
         );
     }
@@ -107,7 +102,7 @@ class HttpClient
             $requests
         );
 
-        $responses = Pool::batch($this->guzzleClient, $requestArray);
+        $responses = Pool::batch($this->guzzleClient, $requestArray, ['http_errors' => false]);
 
         $result = [
             'ok' => [],
@@ -120,9 +115,7 @@ class HttpClient
                 /** @var RequestException $response */
                 $result['failed'][] = [
                     'exception' => $response->getMessage(),
-                    'request_url' => $response->getRequest()->getUrl(),
-                    'effective_url' => $response->hasResponse() ? $response->getResponse()->getEffectiveUrl() :
-                        $response->getRequest()->getUrl(),
+                    'url' => (string)$response->getRequest()->getUri(),
                     'object' => $objects[$key],
                     'status_code' => $response->hasResponse() ? $response->getResponse()->getStatusCode() : '0',
                     'reason' => $response->hasResponse() ? $response->getResponse()->getReasonPhrase() : '',
@@ -138,8 +131,7 @@ class HttpClient
             /** @var RequestInterface $request */
             $request = $requestArray[$key];
             $result['failed'][] = [
-                'request_url' => $request->getUrl(),
-                'effective_url' => $response->getEffectiveUrl(),
+                'url' => (string)$request->getUri(),
                 'object' => $objects[$key],
                 'status_code' => $response->getStatusCode(),
                 'reason' => $response->getReasonPhrase(),
