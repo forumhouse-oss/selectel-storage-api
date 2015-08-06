@@ -13,7 +13,6 @@
     <testsuites>
         <testsuite name="All tests">
             <directory>./tests/src</directory>
-            <exclude>./tests/src/AbstractServiceTest.php</exclude>
         </testsuite>
     </testsuites>
 </phpunit>

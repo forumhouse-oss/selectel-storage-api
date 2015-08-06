@@ -16,8 +16,9 @@ class FileDownloadService extends AbstractService
         $client->setGoodHttpStatusCodes([Response::HTTP_OK]);
         $url = UrlTools::getServerResourceUrl($this->authentication, $container, $file);
         $request = new HttpRequest($client, HttpRequest::METHOD_GET, $url);
+        $request->setStreamResponseBody($file->getLocalName());
         $request->addRequestHeader('X-Auth-Token', $this->authentication->getAuthToken());
 
-        return $request;
+        $client->send($request);
     }
 }

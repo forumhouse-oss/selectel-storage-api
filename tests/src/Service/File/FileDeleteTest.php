@@ -1,22 +1,23 @@
-<?php namespace FHTeam\SelectelStorageApi\Test\Service;
+<?php namespace FHTeam\SelectelStorageApi\Test\Service\File;
 
 use FHTeam\SelectelStorageApi\Authentication\Exception\AuthenticationFailedException;
 use FHTeam\SelectelStorageApi\Exception\UnexpectedHttpStatusException;
 use FHTeam\SelectelStorageApi\Objects\File;
+use FHTeam\SelectelStorageApi\Service\File\FileDeleteService;
 use FHTeam\SelectelStorageApi\Service\File\FileUploadService;
-use GuzzleHttp\Client;
+use FHTeam\SelectelStorageApi\Test\Service\ServiceTestBase;
 
-/**
- * Class FileUploadTest
- *
- * @package FHTeam\SelectelStorageApi\Test\Service
- */
-class FileUploadTest extends ServiceTestBase
+class FileDeleteTest extends ServiceTestBase
 {
     /**
      * @var FileUploadService
      */
     protected $fileUploadService;
+
+    /**
+     * @var FileDeleteService
+     */
+    protected $fileDeleteService;
 
     /**
      * @throws AuthenticationFailedException
@@ -26,12 +27,14 @@ class FileUploadTest extends ServiceTestBase
     {
         parent::setUp();
         $this->fileUploadService = new FileUploadService($this->auth);
+        $this->fileDeleteService = new FileDeleteService($this->auth);
     }
 
     /**
-     *
+     * @throws AuthenticationFailedException
+     * @throws UnexpectedHttpStatusException
      */
-    public function testUploadFile()
+    public function testDeleteFile()
     {
         $file = new File('test.txt');
         $file->setLocalName($this->testFileName);
@@ -39,20 +42,27 @@ class FileUploadTest extends ServiceTestBase
         $file->setSize();
 
         $this->fileUploadService->uploadFile($this->container, $file);
-        (new Client())->get($this->containerUrl.'/'.$file->getServerName());
+
+        $file = new File($this->testFileName);
+
+        $this->fileDeleteService->deleteFile($this->container, $file);
     }
 
     /**
-     *
+     * @throws AuthenticationFailedException
+     * @throws UnexpectedHttpStatusException
      */
-    public function testUploadFiles()
+    public function testDeleteFiles()
     {
         $file = new File('test.txt');
         $file->setLocalName($this->testFileName);
         $file->setContentType();
         $file->setSize();
 
-        $this->fileUploadService->uploadFiles($this->container, [$file], false);
-        (new Client())->get($this->containerUrl.'/'.$file->getServerName());
+        $this->fileUploadService->uploadFile($this->container, $file);
+
+        $file = new File($this->testFileName);
+
+        $this->fileDeleteService->deleteFiles($this->container, [$file]);
     }
 }

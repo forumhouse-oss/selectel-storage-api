@@ -21,6 +21,8 @@ class HttpRequest
 
     const METHOD_GET = 'get';
 
+    const METHOD_PATCH = 'patch';
+
     /**
      * @var HttpClient
      */
@@ -35,6 +37,11 @@ class HttpRequest
      * @var ResponseInterface
      */
     protected $guzzleResponse;
+
+    /**
+     * @var false|string
+     */
+    protected $streamResponseBody = false;
 
     /**
      * HttpRequest constructor.
@@ -130,5 +137,21 @@ class HttpRequest
     public function setGuzzleResponse($guzzleResponse)
     {
         $this->guzzleResponse = $guzzleResponse;
+    }
+
+    /**
+     * @return false|string
+     */
+    public function getStreamResponseBody()
+    {
+        return $this->streamResponseBody;
+    }
+
+    /**
+     * @param false|string $streamResponseBody
+     */
+    public function setStreamResponseBody($streamResponseBody)
+    {
+        $this->streamResponseBody = $streamResponseBody;
     }
 }

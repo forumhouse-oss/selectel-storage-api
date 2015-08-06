@@ -70,7 +70,9 @@ class HttpClient
     public function send(HttpRequest $request)
     {
         $guzzleRequest = $request->getGuzzleRequest();
-        $guzzleResponse = $this->guzzleClient->send($guzzleRequest, ['http_errors' => false]);
+
+        $options = $this->buildRequestOptions($request);
+        $guzzleResponse = $this->guzzleClient->send($guzzleRequest, $options);
         $request->setGuzzleResponse($guzzleResponse);
 
         $statusCode = $guzzleResponse->getStatusCode();
@@ -161,5 +163,21 @@ class HttpClient
             $statusCode,
             "Unexpected http status '$statusCode' from [$method] '$url'. Headers are: ".json_encode($headers)
         );
+    }
+
+    /**
+     * @param HttpRequest $request
+     *
+     * @return array
+     */
+    protected function buildRequestOptions(HttpRequest $request)
+    {
+        $options = ['http_errors' => false];
+
+        if ($request->getStreamResponseBody()) {
+            $options['sink'] = $request->getStreamResponseBody();
+        }
+
+        return $options;
     }
 }
