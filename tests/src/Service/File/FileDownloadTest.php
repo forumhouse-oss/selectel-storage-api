@@ -35,7 +35,7 @@ class FileDownloadTest extends ServiceTestBase
     /**
      *
      */
-    public function testDeleteFile()
+    public function testDownloadFile()
     {
         $fileUp = new File('test.txt');
         $fileUp->setLocalName($this->testFileName);
