@@ -37,7 +37,7 @@ class FileUploadService extends AbstractService
 
         $client = new HttpClient();
 
-        $request = $this->createRequestUploadFile($container, $file, $client);
+        $request = $this->createRequestUploadFile($client, $container, $file);
         $client->send($request);
     }
 
@@ -57,7 +57,7 @@ class FileUploadService extends AbstractService
         $objects = [];
         $client = new HttpClient();
         foreach ($files as $file) {
-            $requests[] = $this->createRequestUploadFile($container, $file, $client);
+            $requests[] = $this->createRequestUploadFile($client, $container, $file);
             $objects[] = $file;
         }
         $result = $client->sendMany($requests, $objects);
@@ -82,16 +82,17 @@ class FileUploadService extends AbstractService
     }
 
     /**
+     * @param HttpClient $client
      * @param Container  $container
      * @param File       $file
-     * @param HttpClient $client
      *
      * @return HttpRequest
+     * @throws \FHTeam\SelectelStorageApi\Exception\UnexpectedError
      */
     protected function createRequestUploadFile(
+        HttpClient $client,
         Container $container,
-        File $file,
-        HttpClient $client
+        File $file
     ) {
         $url = UrlTools::getServerResourceUrl($this->authentication, $container, $file);
         $request = new HttpRequest($client, HttpRequest::METHOD_PUT, $url);

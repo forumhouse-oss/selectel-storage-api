@@ -56,4 +56,27 @@ class FileDownloadTest extends ServiceTestBase
             throw new \Exception("Downloaded file contents is not equal to an uploaded one");
         }
     }
+
+    /**
+     *
+     */
+    public function testDownloadFiles()
+    {
+        $fileUp = new File('test.txt');
+        $fileUp->setLocalName($this->testFileName);
+        $fileUp->setContentType();
+        $fileUp->setSize();
+
+        $this->fileUploadService->uploadFile($this->container, $fileUp);
+        $fileDown = new File('test.txt');
+
+        $tmpFileName = tempnam(sys_get_temp_dir(), 'selectel-storage-api-test');
+        $fileDown->setLocalName($tmpFileName);
+        $this->fileDownloadService->downloadFiles($this->container, [$fileDown]);
+
+        $fileUpContents = file_get_contents($this->testFileName);
+        $fileDownContents = file_get_contents($tmpFileName);
+
+        $this->assertSame($fileUpContents, $fileDownContents);
+    }
 }

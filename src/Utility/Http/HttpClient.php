@@ -104,7 +104,8 @@ class HttpClient
             $requests
         );
 
-        $responses = Pool::batch($this->guzzleClient, $requestArray, ['options' => ['http_errors' => false]]);
+        $options = ['http_errors' => false];
+        $responses = Pool::batch($this->guzzleClient, $requestArray, ['options' => $options]);
 
         $result = [
             'ok' => [],
